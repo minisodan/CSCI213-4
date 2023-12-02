@@ -22,9 +22,8 @@ namespace MusicStore.Controllers
         // GET: Musics
         public async Task<IActionResult> Index(string SearchMusicGenre, string SearchMusicTitle)
         {
-            /*return _context.Music != null ? 
-                        View(await _context.Music.ToListAsync()) :
-                        Problem("Entity set 'MusicStoreContext.Music'  is null.");*/
+           
+            
             var showAll = from m in _context.Music
 
                           select m;
