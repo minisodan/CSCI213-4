@@ -1,0 +1,46 @@
+﻿@model MusicStore.Models.Cart
+
+@{
+    ViewData["Title"] = "Purchased";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+@if (Model.Items.Count == 0)
+{
+    <p>An error occured.</p>
+}
+
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Total</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>@item.Title</td>
+                    <td>@item.Price.ToString("C")</td>
+                    <td>@item.Quantity</td>
+                    <td>@((item.Price * item.Quantity).ToString("C"))</td>
+                    
+                </tr>
+            }
+        </tbody>
+    </table>
+    <h3>Total: @Model.Items.Sum(i => i.Price * i.Quantity).ToString("C")</h3>
+
+    <!-- go back to browse-->
+    <form asp-controller="Musics" asp-action="Index" method="post">
+        <button type="submit" class="btn btn-success">Back to Browse</button>
+    </form>
+   
+} 

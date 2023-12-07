@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.View;
 using MusicStore.Data;
 using MusicStore.Models;
 
@@ -19,73 +21,85 @@ namespace MusicStore.Controllers
             _context = context;
         }
 
-        // GET: Musics
-        public async Task<IActionResult> Index(string SearchMusicGenre, string SearchMusicTitle)
+        public async Task<IActionResult> Index(string MusicGenre, string MusicPerFormer)
         {
-           
             
-            var showAll = from m in _context.Music
 
-                          select m;
-
-
-
-            if (!String.IsNullOrEmpty(SearchMusicGenre))
-
+            if (_context.Music == null)
             {
-
-                string musicGenre = Convert.ToString(SearchMusicGenre);
-
-                showAll = showAll.Where(s => s.genre == (musicGenre));
-
+                return Problem("Entity set 'MusicStoreContext.Music'  is null.");
             }
 
-            if (!String.IsNullOrEmpty(SearchMusicTitle))
+            // Use LINQ to get list of genres.
+            IQueryable<string> genreQuery = from m in _context.Music
+                                            orderby m.genre
+                                            select m.genre;
 
+            var music = from m in _context.Music
+                        select m;
+
+            IQueryable<string> genreQuery2 = from x in _context.Music
+                                             orderby x.genre
+                                             select x.performer;
+
+            if (!string.IsNullOrEmpty(MusicGenre))
             {
-
-
-
-                showAll = showAll.Where(s => s.title.Contains(SearchMusicTitle));
-
+                genreQuery2 = from x in _context.Music
+                              orderby x.genre
+                              where x.genre.Contains(MusicGenre)
+                              select x.performer;
+                music = music.Where(x => x.genre == MusicGenre && x.performer == MusicPerFormer);
             }
 
+            if (!string.IsNullOrEmpty(MusicPerFormer) && !string.IsNullOrEmpty(MusicGenre))
+            {
+                music = music.Where(x => x.genre == MusicGenre && x.performer == MusicPerFormer);
+            }
 
+            var musicGenreVM = new MusicGerneViewModel
+            {
+                Gernes = new SelectList(await genreQuery.Distinct().ToListAsync()),
+             //   Performer = await music.ToListAsync()
+            
+                Performer = new SelectList(await genreQuery2.Distinct().ToListAsync()),
+                Music = await music.ToListAsync()
+                
+            };
 
-            return View(await showAll.ToListAsync());
-
+            return View(musicGenreVM);
         }
 
-        // GET: Musics/Details/5
+
+        // GET: Movies/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Music == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var music = await _context.Music
+            var movie = await _context.Music
                 .FirstOrDefaultAsync(m => m.id == id);
-            if (music == null)
+            if (movie == null)
             {
                 return NotFound();
             }
 
-            return View(music);
+            return View(movie);
         }
 
-        // GET: Musics/Create
+        // GET: Movies/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Musics/Create
+        // POST: Movies/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,title,year,performer,genre,typeOfPurchase,price")] Music music)
+        public async Task<IActionResult> Create([Bind("id,title,year,performer,typeOfPurchase,genre,price")] Music music)
         {
             if (ModelState.IsValid)
             {
@@ -96,28 +110,28 @@ namespace MusicStore.Controllers
             return View(music);
         }
 
-        // GET: Musics/Edit/5
+        // GET: Movies/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Music == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var music = await _context.Music.FindAsync(id);
-            if (music == null)
+            var movie = await _context.Music.FindAsync(id);
+            if (movie == null)
             {
                 return NotFound();
             }
-            return View(music);
+            return View(movie);
         }
 
-        // POST: Musics/Edit/5
+        // POST: Movies/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,title,year,performer,genre,typeOfPurchase,price")] Music music)
+        public async Task<IActionResult> Edit(int id, [Bind("id,title,year,performer,genre,price")] Music music)
         {
             if (id != music.id)
             {
@@ -133,7 +147,7 @@ namespace MusicStore.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!MusicExists(music.id))
+                    if (!MovieExists(music.id))
                     {
                         return NotFound();
                     }
@@ -147,46 +161,42 @@ namespace MusicStore.Controllers
             return View(music);
         }
 
-        // GET: Musics/Delete/5
+        // GET: Movies/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Music == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var music = await _context.Music
+            var movie = await _context.Music
                 .FirstOrDefaultAsync(m => m.id == id);
-            if (music == null)
+            if (movie == null)
             {
                 return NotFound();
             }
 
-            return View(music);
+            return View(movie);
         }
 
-        // POST: Musics/Delete/5
+        // POST: Movies/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Music == null)
+            var movie = await _context.Music.FindAsync(id);
+            if (movie != null)
             {
-                return Problem("Entity set 'MusicStoreContext.Music'  is null.");
+                _context.Music.Remove(movie);
             }
-            var music = await _context.Music.FindAsync(id);
-            if (music != null)
-            {
-                _context.Music.Remove(music);
-            }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool MusicExists(int id)
+        private bool MovieExists(int id)
         {
-          return (_context.Music?.Any(e => e.id == id)).GetValueOrDefault();
+            return _context.Music.Any(e => e.id == id);
         }
     }
 }

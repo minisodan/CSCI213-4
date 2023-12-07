@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MusicStore.Data;
 using MusicStore.Models;
 using System.Diagnostics;
 
@@ -7,10 +8,24 @@ namespace MusicStore.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private readonly MusicStoreContext _context;
+        public HomeController(ILogger<HomeController> logger, MusicStoreContext context)
         {
             _logger = logger;
+
+            _context = context;
+
+            var result = (from x in context.Music
+                          select x);
+            foreach(var item in result)
+            {
+                Storagecs.ts.Add(item.genre);
+            }
+            foreach(var item in result)
+            {
+                Storagecs.ts.Add(item.performer);
+            }
+
         }
 
         public IActionResult Index()

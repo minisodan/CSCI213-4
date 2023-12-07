@@ -18,6 +18,10 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = C:\Users\jmmot\OneDrive\Documents\GitHub\CSCI213-5\MusicStore
 build_property._RazorSourceGeneratorDebug = 
 
+[C:/Users/jmmot/OneDrive/Documents/GitHub/CSCI213-5/MusicStore/Views/Admin/administrator.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cYWRtaW5pc3RyYXRvci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/jmmot/OneDrive/Documents/GitHub/CSCI213-5/MusicStore/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -52,6 +56,14 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/jmmot/OneDrive/Documents/GitHub/CSCI213-5/MusicStore/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/jmmot/OneDrive/Documents/GitHub/CSCI213-5/MusicStore/Views/ShoppingCart/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hvcHBpbmdDYXJ0XEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/jmmot/OneDrive/Documents/GitHub/CSCI213-5/MusicStore/Views/ShoppingCart/Purchased.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hvcHBpbmdDYXJ0XFB1cmNoYXNlZC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/jmmot/OneDrive/Documents/GitHub/CSCI213-5/MusicStore/Views/_ViewImports.cshtml]
