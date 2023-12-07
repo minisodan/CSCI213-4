@@ -4,13 +4,13 @@ namespace MusicStore.Models
 {
     public class Music
     {
-        public required int id { get; set; }
-        public required string title { get; set; }
-        public required int year { get; set; }
-        public required string performer { get; set; }
-        public required string genre { get; set; }
-        public required string typeOfPurchase { get; set; }
-        public required decimal price { get; set; } 
+        public int id { get; set; }
+        public string? title { get; set; }
+        public int year { get; set; }
+        public string? performer { get; set; }
+        public string? genre { get; set; }
+        public string typeOfPurchase { get; set; }
+        public decimal price { get; set; } 
 
     }
 }
